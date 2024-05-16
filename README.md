@@ -7,6 +7,9 @@ grids ([Madec and Imbard (1996)](#madec_and_imbard_1996).
 ## Creation of model bathymetries
 
 ## Test results
+<img title="gridscale roughness in Weddell Sea" 
+alt="Alt text" src="Weddell_Sea_roughness.png">
+
 
 ## References
 
