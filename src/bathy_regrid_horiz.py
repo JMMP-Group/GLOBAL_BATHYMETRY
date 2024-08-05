@@ -4,9 +4,10 @@
 Horizontal remapping of bathymetry dataset to model grid. 
 
 Assume dataset higher resolution than model grid, so use
-binning and gridbox averaging (median by default).   
+binning and gridbox averaging (median by default).
 
-This version uses xarray.
+Algorithm based on NEMOBAT by Jean-Marc Molines:
+https://github.com/molines/NEMOBAT   
 
 30/7/2021 : This version uses the method of determining if
             a source data point is in the grid cell from 
