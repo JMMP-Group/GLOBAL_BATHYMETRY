@@ -63,6 +63,13 @@ currently cannot deal with inland seas: it assumes ocean points are those with e
 sea level).
 
 ### Smoothing
+In order to avoid forcing the model at the gridscale, a single pass of a 2nd order Shapiro filter was applied, following the 
+algorithm of [Francis (1975)](#francis_1975). MORE DETAILS OF ALGORITHM / CHOICES.
+
+The smoothing was done using a modified version of the _cdfsmooth.f90_ module from the 
+[CDFTools package](#molines_cdftools). The modified version is available at the 
+[JMMP fork](cdftools_jmmp) of the main repository. 
+
 ### ==== code block ====
 ````
   !!CHECK THAT THESE COMMANDS WORK!!
@@ -73,10 +80,22 @@ sea level).
                         -M tmask_eORCA025-GO6-CloseaFill.nc -m \
                         -d3.0 -F -o bathy_eORCA025_noclosea_from_GEBCO2021.nc
 
-  smoothing (see below) 
-
+  cdfsmooth -f bathy_eORCA025_noclosea_from_GEBCO2021_FillZero.nc -c 2 -t S \
+            -n namelist_shapiro.txt
+ 
   closea_copy_bathy.py ...
 ````
+where the namelist_shapiro.txt file was as follows:
+````
+&nam_shapiro
+ln_npol_fold = .TRUE.
+ln_ew_cycl = .TRUE.
+ln_pass_shallow_updates = .TRUE.
+ln_pass_fixed_pt_updates = .FALSE.
+rn_min_val = 5.0
+/
+````
+
 
 ### Checking straits and sills
 ### Creation of 3D model grids and masks
@@ -88,8 +107,19 @@ alt="Alt text" src="Weddell_Sea_roughness.png">
 
 ## References
 
+<a name="molines_cdftools"></a>
+https://github.com/meom-group/CDFTOOLS
+
+<a name="cdftools_jmmp"></a>
+https://github.com/JMMP-group/CDFTOOLS, hash code: 136b95b6ac4fefad6973a4c15ca953dcae65dfc6
+
 <a name="gebco_2021"></a>
 GEBCO Compilation Group (2021): _GEBCO 2021 Grid_, doi:10.5285/c6612cbe-50b3-0cff-e053-6c86abc09f8f
+
+<a name="francis_1975"></a>
+_Francis, M. (1975): _The use of a multipoint filter as a dissipative mechanism in a
+numerical model of the general circulation of the atmosphere_, Quart. J. Roy. Met. Soc. (1975), 101, pp. 567-582,_
+https://doi.org/10.1002/qj.49710142913
 
 <a name="madec_and_imbard_1996"></a>
 Madec, G. and Imbard, M. (1996): _A global ocean mesh to overcome the North Pole singularity_, Climate Dynamics, 12, 381–388,
