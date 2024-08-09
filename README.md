@@ -14,15 +14,16 @@ NEMO format. In principle there is no reason why these grid and mask definitions
 in other ocean models subject to the restriction that they are based on the Arakawa C-grid discretisation, 
 with a land sea mask centred on tracer points. 
 
-All code and scripts can be found in the _src_ directory of this repository unless otherwise stated.
+All code and scripts can be found in the _src_ directory and associated namelists, data files in
+the _etc_ directory of this repository  unless otherwise stated.
 
 ## Table of contents
 1. [Background and motivation](#background-and-motivation)
 2. [Creation of model bathymetries](#creation-of-model-bathymetries)
-   1. [Source dataset](#source-dataset)]
+   1. [Source dataset](#source-dataset)
    2. [Horizontal regridding](#horizontal-regridding)
-   2. [Smoothing](#smoothing)
-   3. [Checking straits and sills](#checking-straits-and-sills)
+   3. [Smoothing](...)
+   4. [Reopening straits and channels](#checking-straits-and-sills)
 3. [Projection onto model vertical grid](#projection-onto-model-vertical-grid)
 4. [Test results](#test-results)
 5. [References](#references)
@@ -96,8 +97,37 @@ rn_min_val = 5.0
 /
 ````
 
+### Reopening straits and channels
+Where narrow strait and channels are only marginally (or not) resolved by the model grid, the 
+horizonal regridding and smoothing process will partially or fully block these channels. There are 
+many examples of channels in the global ocean which have throughflows, exchange flows or overflows
+which are very important for interbasin exchange of water masses. For these channels we apply hand
+editing of the smoothed bathymetry to reset the ocean depths in the channels with the aim of
+modelling approximately the correct volume throughflow or exchange. 
 
-### Checking straits and sills
+Since the channels in question are not fully resolved, this process can be viewed as a crude
+subgrid parametrisation. The channels are reset to approximately the observed channel depth, and
+the model integrated for a few decades. If the volume flow through the channel is judged to be still too
+far from the observed estimates, the depth in the channel can be adjusted, or alternatively the 
+side or bottom friction in the channel changed. Typically for a low resolution model a single-point 
+channel in the model can be much wider than the real channel and so prone to allowing too much
+throughflow, and this can be mitigated by increasing the bottom or side friction in the model. 
+The bathymetries in this repository were created for use in the NEMO model. Global NEMO configurations
+are typically run with a free-slip lateral boundary condition; in order to reduce flow in some of the
+channels we change the slip-condition in the channels to a partial slip or no slip condition.
+
+Note that it is also possible in NEMO configurations to adjust the width of channels by adjusting 
+the horizontal scale factors _e1t_ and _e2t_ locally but we have not done that for these configurations. 
+
+The channels and flows that were checked were the North Atlantic overflows: Denmark Strait and Faroe
+Bank Channel; exchanges with marginal seas: Gibraltar Strait, Bab el Mandeb and Strait of Hormuz; 
+and the exit channels for the Indonesian Throughflow: Lombok Strait, Ombai Strait and Timor Channel.
+For ORCA1, it was found necessary to edit all of these apart from the Strait of Hormuz. For ORCA025,
+it was found necessary to edit the Denmark Strait, Faroe Bank Channel, Strait of Gibraltar, Bab el
+Mandeb and the Lombok Strait. For ORCA12, no editing was necessary. The code used to reset the 
+bathymetry at chosen points was edit_field.py with associated data files ...
+
+
 ### Creation of 3D model grids and masks
 
 ## Test results

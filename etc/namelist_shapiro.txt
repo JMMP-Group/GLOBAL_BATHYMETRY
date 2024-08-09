@@ -1,0 +1,7 @@
+&nam_shapiro
+ln_npol_fold = .TRUE.
+ln_ew_cycl = .TRUE.
+ln_pass_shallow_updates = .TRUE.
+ln_pass_fixed_pt_updates = .FALSE.
+rn_min_val = 5.0
+/

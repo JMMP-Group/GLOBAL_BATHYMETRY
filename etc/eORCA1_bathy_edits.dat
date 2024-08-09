@@ -1,0 +1,53 @@
+#### ii, jj, new depth (m) #####
+## Denmark Strait
+## copy standard bathy 
+ 260, 282, 718.0
+ 260, 283, 718.0
+ 260, 284, 718.0
+ 261, 284, 718.0
+ 261, 285, 718.0
+## Faroe Bank Channel
+## copy standard bathy 
+ 276, 277, 795.0
+ 277, 277, 795.0
+ 277, 276, 795.0
+ 278, 275, 951.0
+ 278, 276, 951.0
+ 279, 276, 951.0
+ 280, 276, 951.0
+ 281, 276, 951.0
+## Gibraltar
+## copy standard bathy in the strait itself
+## (actually makes it shallower) and deepen
+## a couple of points to the west but not to
+## the same extent as in the old bathymetry
+ 281, 240, 450.0
+ 281, 239, 450.0
+ 282, 240, 284.0
+## Bab el Mandeb
+## copy standard bathy in strait
+## not for deep channel in Gulf of Aden
+ 331, 215, 208.0
+ 331, 214, 208.0
+ 331, 213, 319.0
+## Lombok Strait
+## double the depth cf old bathymetry
+  43, 164, 300.0
+## Ombai Strait
+## Copy old bathymetry
+  52, 164, 2467.0
+## Timor Passage
+## Copy old bathymetry
+  50, 160, 1535.0
+  51, 160, 1535.0
+  52, 160, 1535.0
+  52, 161, 1535.0
+  53, 161, 1535.0
+  53, 162, 1535.0
+  54, 162, 1535.0
+  54, 163, 1535.0
+  55, 163, 1535.0
+  56, 163, 1535.0
+  57, 163, 1535.0
+  57, 164, 1535.0
+#
