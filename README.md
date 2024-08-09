@@ -68,7 +68,7 @@ algorithm of [Francis (1975)](#francis_1975). MORE DETAILS OF ALGORITHM / CHOICE
 
 The smoothing was done using a modified version of the _cdfsmooth.f90_ module from the 
 [CDFTools package](#molines_cdftools). The modified version is available at the 
-[JMMP fork](cdftools_jmmp) of the main repository. 
+[JMMP fork](#cdftools_jmmp) of the main repository. 
 
 ### ==== code block ====
 ````
