@@ -125,10 +125,20 @@ and the exit channels for the Indonesian Throughflow: Lombok Strait, Ombai Strai
 For ORCA1, it was found necessary to edit all of these apart from the Strait of Hormuz. For ORCA025,
 it was found necessary to edit the Denmark Strait, Faroe Bank Channel, Strait of Gibraltar, Bab el
 Mandeb and the Lombok Strait. For ORCA12, no editing was necessary. The code used to reset the 
-bathymetry at chosen points was edit_field.py with associated data files ...
-
+bathymetry at chosen points was edit_field.py with associated data files _eORCA1_bathy_edits.dat_ 
+and _eORCA025_bathy_edits.dat_.
 
 ### Creation of 3D model grids and masks
+The bathymetries on the model horizontal grid can be used to generate model 3D grids and masks, a 
+process that depends on the choice of vertical coordinate system. Here we provide 3D grids and masks
+(NEMO *domain_cfg.nc* files), for a _z_-coordinate vertical grid with 75 levels and partial grid cells
+allowed at the base of the water column (**REFS**). The distribution of the 75 levels is based on a 
+double tanh function with a resolution of 1m at the surface (**REF**). 
+
+The 3D grids and masks were created using the 
+[*DOMAINcfg*](https://forge.nemo-ocean.eu/nemo/nemo/-/tree/5ee5e1a1f060e41abcd56d3856c25fe534f76691) 
+tool available as part of the NEMO release, where the link points to the revision used. The namelists
+used for each configuration are available in the *etc* directory of this repository.
 
 ## Test results
 <img title="gridscale roughness in Weddell Sea" 
