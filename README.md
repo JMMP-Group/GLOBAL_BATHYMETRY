@@ -65,37 +65,12 @@ sea level).
 
 ### Smoothing
 In order to avoid forcing the model at the gridscale, a single pass of a 2nd order Shapiro filter was applied, following the 
-algorithm of [Francis (1975)](#francis_1975). MORE DETAILS OF ALGORITHM / CHOICES.
+algorithm of [Francis (1975)](#francis_1975). This filter was chosen since it preferentially damps variations near
+the gridscale.
 
 The smoothing was done using a modified version of the _cdfsmooth.f90_ module from the 
 [CDFTools package](#molines_cdftools). The modified version is available at the 
 [JMMP fork](#cdftools_jmmp) of the main repository. 
-
-### ==== code block ====
-````
-  !!CHECK THAT THESE COMMANDS WORK!!
-  closea_fill.py -C domcfg_eORCA025_v2.nc -M mesh_mask_eORCA025-GO6.nc \
-                 -o tmask_eORCA025-GO6-CloseaFill.nc
-
-  bathy_regrid_horiz.py -B GEBCO_2021_sub_ice_topo.nc -S gebco \
-                        -M tmask_eORCA025-GO6-CloseaFill.nc -m \
-                        -d3.0 -F -o bathy_eORCA025_noclosea_from_GEBCO2021.nc
-
-  cdfsmooth -f bathy_eORCA025_noclosea_from_GEBCO2021_FillZero.nc -c 2 -t S \
-            -n namelist_shapiro.txt
- 
-  closea_copy_bathy.py ...
-````
-where the namelist_shapiro.txt file was as follows:
-````
-&nam_shapiro
-ln_npol_fold = .TRUE.
-ln_ew_cycl = .TRUE.
-ln_pass_shallow_updates = .TRUE.
-ln_pass_fixed_pt_updates = .FALSE.
-rn_min_val = 5.0
-/
-````
 
 ### Reopening straits and channels
 Where narrow strait and channels are only marginally (or not) resolved by the model grid, the 
@@ -128,6 +103,31 @@ Mandeb and the Lombok Strait. For ORCA12, no editing was necessary. The code use
 bathymetry at chosen points was edit_field.py with associated data files _eORCA1_bathy_edits.dat_ 
 and _eORCA025_bathy_edits.dat_.
 
+### Commands used for creation of 2D bathymetries
+
+These are the specific linux commands used to create the 2D bathymetries.
+````
+  !!CHECK THAT THESE COMMANDS WORK!!
+  closea_fill.py -C domcfg_eORCA025_v2.nc -M mesh_mask_eORCA025-GO6.nc \
+                 -o tmask_eORCA025-GO6-CloseaFill.nc
+
+  bathy_regrid_horiz.py -B GEBCO_2021_sub_ice_topo.nc -S gebco \
+                        -M tmask_eORCA025-GO6-CloseaFill.nc -m \
+                        -d3.0 -F -o bathy_eORCA025_noclosea_from_GEBCO2021.nc
+
+  fill_zero...
+  
+  cdfsmooth -f bathy_eORCA025_noclosea_from_GEBCO2021_FillZero.nc -c 2 -t S \
+            -n namelist_shapiro.txt
+ 
+  closea_copy_bathy.py ...
+  
+  edit_field.py -i bathy_eORCA025_noclosea_from_GEBCO2021_FillZero_S1TT.nc \
+                -o bathy_eORCA025_noclosea_from_GEBCO2021_FillZero_S1TT_edit.nc \
+                -v Bathymetry -e eORCA025_bathy_edits.dat
+````
+where the files *namelist_shapiro.txt*, *eORCA1_bathy_edits.dat*, and *eORCA025_bathy_edits.dat* can be found in the *etc* directory of this repository.
+
 ### Creation of 3D model grids and masks
 The bathymetries on the model horizontal grid can be used to generate model 3D grids and masks, a 
 process that depends on the choice of vertical coordinate system. Here we provide 3D grids and masks
@@ -136,14 +136,12 @@ allowed at the base of the water column (**REFS**). The distribution of the 75 l
 double tanh function with a resolution of 1m at the surface (**REF**). 
 
 The 3D grids and masks were created using the 
-[*DOMAINcfg*](https://forge.nemo-ocean.eu/nemo/nemo/-/tree/5ee5e1a1f060e41abcd56d3856c25fe534f76691) 
+[*DOMAINcfg*](https://forge.nemo-ocean.eu/nemo/nemo/-/tree/5ee5e1a1f060e41abcd56d3856c25fe53) 
 tool available as part of the NEMO release, where the link points to the revision used. The namelists
 used for each configuration are available in the *etc* directory of this repository.
 
-## Test results
-<img title="gridscale roughness in Weddell Sea" 
-alt="Alt text" src="Weddell_Sea_roughness.png">
 
+## Testing
 
 ## References
 
