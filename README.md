@@ -66,10 +66,13 @@ sea level).
 ### Smoothing
 In order to avoid forcing the model at the gridscale, a single pass of a 2nd order Shapiro filter was applied, following the 
 algorithm of [Francis (1975)](#francis_1975). This filter was chosen since it preferentially damps variations near
-the gridscale.
+the gridscale. A simple iterative constraint was applied to ensure that the smoothing operator did no change
+the coastline. The details of the filter and constraint are given in these 
+[notes](https://github.com/JMMP-Group/GLOBAL_BATHYMETRY/blob/main/doc/Notes_shapiro_filter.pdf).
 
 The smoothing was done using a modified version of the _cdfsmooth.f90_ module from the 
-[CDFTools package](#molines_cdftools). The modified version is available at the 
+[CDFTools package](#molines_cdftools). Note that the Shapiro filter option in _cdfsmooth_ has been completely
+rewritten compared to the original version of the module. The modified version is available at the 
 [JMMP fork](#cdftools_jmmp) of the main repository. 
 
 ### Reopening straits and channels
