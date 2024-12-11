@@ -66,7 +66,7 @@ sea level).
 ### Smoothing
 In order to avoid forcing the model at the gridscale, a single pass of a 2nd order Shapiro filter was applied, following the 
 algorithm of [Francis (1975)](#francis_1975). This filter was chosen since it preferentially damps variations near
-the gridscale. A simple iterative constraint was applied to ensure that the smoothing operator did no change
+the gridscale. A successive correction method was applied to ensure that the smoothing operator did no change
 the coastline. The details of the filter and constraint are given in these 
 [notes](https://github.com/JMMP-Group/GLOBAL_BATHYMETRY/blob/main/doc/Notes_shapiro_filter.pdf).
 
