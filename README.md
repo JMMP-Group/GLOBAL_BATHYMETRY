@@ -1,21 +1,29 @@
 # GLOBAL_BATHYMETRY
-This repository contains new global bathymetry datasets for ocean models using the ORCA family of 
+This repository contains global bathymetry datasets for ocean models using the ORCA family of 
 grids ([Madec and Imbard (1996)](#madec_and_imbard_1996)). The source data set is [GEBCO 2021](#gebco_2021).
 Horizonally regridded bathymetries are provided on the _eORCA1_, _eORCA025_, and _eORCA12_ grids 
 (with nominal 1&deg;, 1/4&deg; and 1/12&deg; resolution respectively).
 
 The  2D bathymetries on the model grid can be used to generate the model 3D grid and masks. This process 
-depends on the choice of vertical coordinate. In this release we also provide 3D model grids and masks
-for a z-level vertical grid with partial cells at the ocean floor.
+depends on the choice of vertical coordinate. 
 
-The bathmetries and 3D grids and masks in this repository were created for use in the NEMO model 
-([Madec et al (2019)](madec_et_al_2019)) and much of the processing uses grid definition files in 
+The bathmetries in this repository were created for use in the NEMO model ([Madec et al (2019)](madec_et_al_2019)) 
+and much of the processing uses grid definition files in 
 NEMO format. In principle there is no reason why these grid and mask definitions should not be used
 in other ocean models subject to the restriction that they are based on the Arakawa C-grid discretisation, 
 with a land sea mask centred on tracer points. 
 
 All code and scripts can be found in the _src_ directory and associated namelists, data files in
 the _etc_ directory of this repository  unless otherwise stated.
+
+This release only includes bathymetries for ORCA025 and ORCA12. Future releases will also include the
+bathymetry for ORCA1. The bathymetry files for this release are available here:
+
+  [***files DOI***].
+
+These files were used to generate the 3D grids and masks for the 
+[GOSI10p3 configuration](https://code.metoffice.gov.uk/trac/GO/wiki/GODocumentation/GOSI10.0/GOSI10Releases). 
+[**Maybe point to the Github release??**]
 
 ## Table of contents
 1. [Background and motivation](#background-and-motivation)
@@ -133,16 +141,11 @@ where the files *namelist_shapiro.txt*, *eORCA1_bathy_edits.dat*, and *eORCA025_
 
 ### Creation of 3D model grids and masks
 The bathymetries on the model horizontal grid can be used to generate model 3D grids and masks, a 
-process that depends on the choice of vertical coordinate system. Here we provide 3D grids and masks
-(NEMO *domain_cfg.nc* files), for a _z_-coordinate vertical grid with 75 levels and partial grid cells
-allowed at the base of the water column (**REFS**). The distribution of the 75 levels is based on a 
-double tanh function with a resolution of 1m at the surface (**REF**). 
+process that depends on the choice of vertical coordinate system. For the NEMO model this can be 
+achieved using the *DOMAINcfg* tool available as part of the NEMO release. 
 
-The 3D grids and masks were created using the 
-[*DOMAINcfg*](https://forge.nemo-ocean.eu/nemo/nemo/-/tree/5ee5e1a1f060e41abcd56d3856c25fe53) 
-tool available as part of the NEMO release, where the link points to the revision used. The namelists
-used for each configuration are available in the *etc* directory of this repository.
-
+The bathymetries in this release were used to create the 3D grids and masks used in the 
+[GOSI10p3 configuration](https://code.metoffice.gov.uk/trac/GO/wiki/GODocumentation/GOSI10.0/GOSI10Releases)
 
 ## License
 © Crown copyright, Met Office (2021-2024).
