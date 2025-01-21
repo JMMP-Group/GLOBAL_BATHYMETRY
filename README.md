@@ -1,5 +1,5 @@
 # GLOBAL_BATHYMETRY
-This repository contains global bathymetry datasets for ocean models using the ORCA family of 
+This repository documents global bathymetry datasets for ocean models using the ORCA family of 
 grids ([Madec and Imbard (1996)](#madec_and_imbard_1996)). The source data set is [GEBCO 2021](#gebco_2021).
 Horizonally regridded bathymetries are provided on the _eORCA1_, _eORCA025_, and _eORCA12_ grids 
 (with nominal 1&deg;, 1/4&deg; and 1/12&deg; resolution respectively).
@@ -38,6 +38,15 @@ These files were used to generate the 3D grids and masks for the
 
 ## Background and motivation 
 
+* Choices made when creating model bathymetries can have a large impact on the model solutions:
+  * roughness / bathymetric drag
+  * throughflows and exchanges in straits
+* Choices are often poorly documented. 
+* Aim for better documented, traceable, downloadable model bathymetries.
+* Particular model input files are often used for more than one model configuration so makes sense to document them separately from the configurations.
+
+The choices made
+
 ## Creation of model bathymetries
 ### Horizontal regridding
 The nominal resolution of the [GEBCO 2021](#gebco_2021)  dataset is 15 arc seconds (although the effective
@@ -46,8 +55,7 @@ take the median value of all source data points inside a model grid cell. The py
 **bathy_regrid_horiz.py** which is based on the algorithm from [NEMOBAT](#nemobat) by J-M. Molines whereby
 the model grid cells are approximated as quadrilaterals in latitude-longitude space. 
 
-**General options:** A minimum depth at sea points of 3.0m was set using the _min_depth_ keyword. Note 
-that as detailed below, the smoothing step effectively resets this to 5.0m. 
+**General options:** A minimum depth at sea points of 5.0m was set using the _min_depth_ keyword. 
 
 **Coastline:** A decision was made to maintain the same coastline as the previous _ORCA_ bathymetries to 
 faciliate the use of the new bathymetries in coupled models, where a change in the surface land-sea mask
@@ -116,25 +124,34 @@ and _eORCA025_bathy_edits.dat_.
 
 ### Commands used for creation of 2D bathymetries
 
-These are the specific linux commands used to create the 2D bathymetries.
+As an example these are the specific linux commands used to create the 2D bathymetries for 
+the **eORCA025** grid.
 ````
-  !!CHECK THAT THESE COMMANDS WORK!!
-  closea_fill.py -C domcfg_eORCA025_v2.nc -M mesh_mask_eORCA025-GO6.nc \
-                 -o tmask_eORCA025-GO6-CloseaFill.nc
+  # fill in inland seas using the closea_mask array
+  closea_fill.py -C grid_mask_eORCA025-GO6.nc -M grid_mask_eORCA025-GO6.nc \
+                 -o grid_mask_eORCA025-GO6_CloseaFill.nc
 
+  # regrid to the model grid
   bathy_regrid_horiz.py -B GEBCO_2021_sub_ice_topo.nc -S gebco \
-                        -M tmask_eORCA025-GO6-CloseaFill.nc -m \
-                        -d3.0 -F -o bathy_eORCA025_noclosea_from_GEBCO2021.nc
+                        -M grid_mask_eORCA025-GO6_CloseaFill.nc -m \
+                        -d5.0 -F -o bathy_eORCA025_noclosea_from_GEBCO2021.nc
 
-  fill_zero...
+  # this step required because cdfsmooth expects zeroes at land points
+  # ncatted part of the NCO package at: https://nco.sourceforge.net/nco.html
+  ncatted -a _FillValue,Bathymetry,m,d,0.0 bathy_eORCA025_noclosea_from_GEBCO2021.nc
   
-  cdfsmooth -f bathy_eORCA025_noclosea_from_GEBCO2021_FillZero.nc -c 2 -t S \
+  # apply smoothing
+  cdfsmooth -f bathy_eORCA025_noclosea_from_GEBCO2021.nc -c 2 -t S \
             -n namelist_shapiro.txt
  
-  closea_copy_bathy.py ...
+  # copy the bathymetry of the inland seas from the old bathymetry
+  closea_copy_bathy.py -C grid_mask_eORCA025-GO6.nc -S grid_mask_eORCA025-GO6.nc \
+                       -T bathy_eORCA025_noclosea_from_GEBCO2021_S21TT.nc \
+                       -o bathy_eORCA025_noclosea_from_GEBCO2021_S21TT_CloseaCopy.nc
   
-  edit_field.py -i bathy_eORCA025_noclosea_from_GEBCO2021_FillZero_S1TT.nc \
-                -o bathy_eORCA025_noclosea_from_GEBCO2021_FillZero_S1TT_edit.nc \
+  # apply hand editing to straits
+  edit_field.py -i bathy_eORCA025_noclosea_from_GEBCO2021_S21TT_CloseaCopy.nc \
+                -o bathy_eORCA025_noclosea_from_GEBCO2021_S21TT_CloseaCopy_edit.nc \
                 -v Bathymetry -e eORCA025_bathy_edits.dat
 ````
 where the files *namelist_shapiro.txt*, *eORCA1_bathy_edits.dat*, and *eORCA025_bathy_edits.dat* can be found in the *etc* directory of this repository.

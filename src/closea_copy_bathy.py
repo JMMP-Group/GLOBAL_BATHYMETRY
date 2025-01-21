@@ -24,6 +24,12 @@ def closea_copy_bathy(bathy_source=None, bathy_target=None, bathy_out=None,
         bathy_source = source_data.Bathymetry
 
     with xr.open_dataset(bathy_target) as target_data:
+        coords={}
+        for coordname in ['nav_lat','nav_lon']:
+            try:
+                coords[coordname] = getattr(target_data,coordname)
+            except(AttributeError):
+                pass
         bathy_target = target_data.Bathymetry
 
     if lakes_to_copy is not None:
@@ -39,6 +45,9 @@ def closea_copy_bathy(bathy_source=None, bathy_target=None, bathy_out=None,
             bathy_target.values = np.where(closea_mask.astype(int) == lake_index, bathy_source.values, bathy_target.values)
 
     outdata = bathy_target.to_dataset()    
+    if len(coords.keys()) > 0:
+        for key in coords.keys():
+            outdata[key] = coords[key]
     outdata.to_netcdf(bathy_out)
                 
 if __name__=="__main__":
