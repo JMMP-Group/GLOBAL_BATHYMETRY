@@ -17,7 +17,9 @@ All code and scripts can be found in the _src_ directory and associated namelist
 the _etc_ directory of this repository  unless otherwise stated.
 
 This release only includes bathymetries for ORCA025 and ORCA12. Future releases will also include the
-bathymetry for ORCA1. The bathymetry files for this release are available here:
+bathymetry for ORCA1. The bathymetry files for this release are available at the following link. We also
+provide input fields (model grid information etc.) required to recreate the model bathymetry. Note that
+these fields are provided for convenience and are not documented here.
 
   [***files DOI***].
 
@@ -32,20 +34,28 @@ These files were used to generate the 3D grids and masks for the
    2. [Horizontal regridding](#horizontal-regridding)
    3. [Smoothing](...)
    4. [Reopening straits and channels](#checking-straits-and-sills)
+   5. [Commands used for creation of 2D bathymetries](#commands-used-for-creation-of-2d-bathymetries)
 3. [Projection onto model vertical grid](#projection-onto-model-vertical-grid)
 4. [License](#license)
 5. [References](#references)
 
 ## Background and motivation 
 
-* Choices made when creating model bathymetries can have a large impact on the model solutions:
-  * roughness / bathymetric drag
-  * throughflows and exchanges in straits
-* Choices are often poorly documented. 
-* Aim for better documented, traceable, downloadable model bathymetries.
-* Particular model input files are often used for more than one model configuration so makes sense to document them separately from the configurations.
+In order to create a 3D grid and land sea mask for an ocean model, the first step is to create a 2D model bathymetry 
+field by regridding from an observational dataset. The choices made during this process can have a significant impact 
+on the model simulation. For example, smoothing of the model bathymetry field is often applied to avoid forcing the 
+model at the gridscale, and the degree of smoothing can impact the degree of bathymetric drag on the large scale flow.
+The cross sectional area of narrow channels can control the volume fluxes of throughflows and exchanges. 
+These choices are often poorly documented. 
 
-The choices made
+The original motivation for creating the model bathymetries in this release was to create a less smoothed version of 
+the eORCA025 bathymetry, because it was found that a less smoothed bathymetry gave more bathymetric drag and helped to 
+damp overactive subpolar gyres in the Southern Ocean. We took the opportunity to create a set of new bathymetries for
+the eORCA1, eORCA025 and eORCA12 grids, which are traceable in the sense of all using the same processing apart from
+details of tuning around particular straits, and fully documented. 
+
+The choice to create a release for model input files separately from the release of model configurations is motivated
+by the fact that the same files are often used for multiple versions of a model configuration.
 
 ## Creation of model bathymetries
 ### Horizontal regridding
@@ -125,7 +135,8 @@ and _eORCA025_bathy_edits.dat_.
 ### Commands used for creation of 2D bathymetries
 
 As an example these are the specific linux commands used to create the 2D bathymetries for 
-the **eORCA025** grid.
+the **eORCA025** grid. All required input fields are provided in the "grid_mask" files which are 
+downloadable with the bathymetry files. 
 ````
   # fill in inland seas using the closea_mask array
   closea_fill.py -C grid_mask_eORCA025-GO6.nc -M grid_mask_eORCA025-GO6.nc \
