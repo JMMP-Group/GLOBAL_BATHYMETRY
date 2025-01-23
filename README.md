@@ -36,8 +36,9 @@ These files were used to generate the 3D grids and masks for the
    4. [Reopening straits and channels](#checking-straits-and-sills)
    5. [Commands used for creation of 2D bathymetries](#commands-used-for-creation-of-2d-bathymetries)
 3. [Projection onto model vertical grid](#projection-onto-model-vertical-grid)
-4. [License](#license)
-5. [References](#references)
+4. [Authors](#authors)
+5. [License](#license)
+6. [References](#references)
 
 ## Background and motivation 
 
@@ -174,6 +175,10 @@ achieved using the *DOMAINcfg* tool available as part of the NEMO release.
 
 The bathymetries in this release were used to create the 3D grids and masks used in the 
 [GOSI10p3 configuration](https://code.metoffice.gov.uk/trac/GO/wiki/GODocumentation/GOSI10.0/GOSI10Releases)
+
+## Authors
+* [Dave Storkey](https://github.com/DaveStorkey)
+* [Mike Bell](mailto:mike.bell@metoffice.gov.uk)
 
 ## License
 © Crown copyright, Met Office (2021-2024).
