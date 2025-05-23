@@ -17,15 +17,21 @@ All code and scripts can be found in the _src_ directory and associated namelist
 the _etc_ directory of this repository  unless otherwise stated.
 
 This release only includes bathymetries for ORCA025 and ORCA12. Future releases will also include the
-bathymetry for ORCA1. The bathymetry files for this release are available at the following link. We also
+bathymetry for ORCA1. The bathymetry files for this release  are available at the following links. We also
 provide input fields (model grid information etc.) required to recreate the model bathymetry. Note that
 these fields are provided for convenience and are not documented here.
 
-  [***files DOI***].
+  * ORCA025 (v1.0.0) : https://doi.org/10.5281/zenodo.15494369
+  * ORCA12 (v1.0.0)  : https://doi.org/10.5281/zenodo.15495870
 
 These files were used to generate the 3D grids and masks for the 
-[GOSI10p3 configuration](https://code.metoffice.gov.uk/trac/GO/wiki/GODocumentation/GOSI10.0/GOSI10Releases). 
-[**Maybe point to the Github release??**]
+[GOSI10p3 configuration](https://code.metoffice.gov.uk/trac/GO/wiki/GODocumentation/GOSI10.0/GOSI10Releases)
+
+There is a known issue in the v1.0.0 release with the bathymetry in the Caspian Sea which has an
+unrealistic plateau in the centre of the sea. The bathymetry in the inland seas was copied from the
+older model bathymetry datasets (see section on horizontal regridding below). In future releases the
+bathymetry in the inland seas will be derived from the GEBCO2021 dataset using lake surface elevation
+data which should fix this issue.
 
 ## Table of contents
 1. [Background and motivation](#background-and-motivation)
@@ -70,7 +76,7 @@ the model grid cells are approximated as quadrilaterals in latitude-longitude sp
 
 **Coastline:** A decision was made to maintain the same coastline as the previous _ORCA_ bathymetries to 
 faciliate the use of the new bathymetries in coupled models, where a change in the surface land-sea mask
-can necessitate a lot of work [what?]. This was achieved by setting the _mask_in_ keyword to True, which 
+can necessitate a lot of work. This was achieved by setting the _mask_in_ keyword to True, which 
 tells the routine to impose the land-sea mask from the mesh file on the new bathymetry. The choice to 
 impose the old coastline raises the issue of how to set the ocean depth at points which would be land 
 points based on GEBCO 2021 but were sea points with the old coastline. These were dealt with as follows.
@@ -116,13 +122,7 @@ the model integrated for a few decades. If the volume flow through the channel i
 far from the observed estimates, the depth in the channel can be adjusted, or alternatively the 
 side or bottom friction in the channel changed. Typically for a low resolution model a single-point 
 channel in the model can be much wider than the real channel and so prone to allowing too much
-throughflow, and this can be mitigated by increasing the bottom or side friction in the model. 
-The bathymetries in this repository were created for use in the NEMO model. Global NEMO configurations
-are typically run with a free-slip lateral boundary condition; in order to reduce flow in some of the
-channels we change the slip-condition in the channels to a partial slip or no slip condition.
-
-Note that it is also possible in NEMO configurations to adjust the width of channels by adjusting 
-the horizontal scale factors _e1t_ and _e2t_ locally but we have not done that for these configurations. 
+throughflow, and this can be mitigated by increasing the bottom or side friction in the model.
 
 The channels and flows that were checked were the North Atlantic overflows: Denmark Strait and Faroe
 Bank Channel; exchanges with marginal seas: Gibraltar Strait, Bab el Mandeb and Strait of Hormuz; 
@@ -130,14 +130,19 @@ and the exit channels for the Indonesian Throughflow: Lombok Strait, Ombai Strai
 For ORCA1, it was found necessary to edit all of these apart from the Strait of Hormuz. For ORCA025,
 it was found necessary to edit the Denmark Strait, Faroe Bank Channel, Strait of Gibraltar, Bab el
 Mandeb and the Lombok Strait. For ORCA12, no editing was necessary. The code used to reset the 
-bathymetry at chosen points was edit_field.py with associated data files _eORCA1_bathy_edits.dat_ 
+bathymetry at chosen points was **edit_field.py** with associated data files _eORCA1_bathy_edits.dat_ 
 and _eORCA025_bathy_edits.dat_.
+
+The tuning of throughflows for the bathymetries was done using the [GOSI10p3 configuration](https://code.metoffice.gov.uk/trac/GO/wiki/GODocumentation/GOSI10.0/GOSI10Releases). For the 
+ORCA025 and ORCA12 bathymetries included in this release, no special tuning of the friction or side
+wall slip condition was applied at narrow channels. It is also possible in NEMO configurations to adjust the width of channels by adjusting 
+the horizontal scale factors _e1t_ and _e2t_ locally but we have not done that for these configurations. 
 
 ### Commands used for creation of 2D bathymetries
 
 As an example these are the specific linux commands used to create the 2D bathymetries for 
 the **eORCA025** grid. All required input fields are provided in the "grid_mask" files which are 
-downloadable with the bathymetry files. 
+downloadable with the bathymetry files.
 ````
   # fill in inland seas using the closea_mask array
   closea_fill.py -C grid_mask_eORCA025-GO6.nc -M grid_mask_eORCA025-GO6.nc \
